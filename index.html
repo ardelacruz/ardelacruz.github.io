@@ -36,18 +36,22 @@
             width: 100px;
             height: 100px;
             margin: 0 auto 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             animation: pulse 2s infinite;
-        }
-
-        .checkmark {
-            color: white;
             font-size: 60px;
             font-weight: bold;
+            color: white;
+        }
+
+        .success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        .failed {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
         }
 
         h1 {
@@ -58,12 +62,19 @@
         }
 
         .status-text {
-            color: #667eea;
             font-size: 1.8em;
             font-weight: 600;
             margin: 20px 0;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        .success-text {
+            color: #4CAF50;
+        }
+
+        .failed-text {
+            color: #f44336;
         }
 
         .message {
@@ -74,7 +85,6 @@
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -85,6 +95,14 @@
             text-decoration: none;
             display: inline-block;
             font-weight: 500;
+        }
+
+        .success-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        .failed-btn {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
         }
 
         .btn:hover {
@@ -106,15 +124,12 @@
         @keyframes pulse {
             0% {
                 transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
             }
-            70% {
+            50% {
                 transform: scale(1.05);
-                box-shadow: 0 0 0 20px rgba(102, 126, 234, 0);
             }
             100% {
                 transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
             }
         }
 
@@ -135,21 +150,21 @@
 </head>
 <body>
     <div class="container">
-        <div class="icon">
-            <div class="checkmark">✓</div>
+        <div class="icon" id="statusIcon">
+            ?
         </div>
         
-        <h1>¡Transacción Procesada!</h1>
+        <h1>Estado de Pago</h1>
         
         <div class="status-text" id="statusMessage">
-            Procesando...
+            Verificando...
         </div>
         
-        <p class="message">
-            Gracias por tu compra. Tu pago ha sido procesado exitosamente.
+        <p class="message" id="messageText">
+            Verificando el estado de tu transacción.
         </p>
         
-        <a href="#" class="btn" id="actionButton">Continuar</a>
+      
     </div>
 
     <script>
@@ -161,25 +176,39 @@
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
 
+        // Elementos del DOM
+        var statusIcon = document.getElementById('statusIcon');
+        var statusMessage = document.getElementById('statusMessage');
+        var messageText = document.getElementById('messageText');        
+
         // Obtener el parámetro 'status' de la URL
-        var status = getUrlParameter('status');
-        var statusElement = document.getElementById('statusMessage');
-        var buttonElement = document.getElementById('actionButton');
+        var status = getUrlParameter('status').toLowerCase();
 
-        // Verificar si el parámetro es 'pago completado'
-        if (status.toLowerCase() === 'pago completado') {
-            statusElement.textContent = 'Pago Completado';
-            statusElement.style.color = '#4CAF50';
-        } else if (status) {
-            statusElement.textContent = status;
+        // Configurar según el estado
+        if (status === 'completado') {
+            // Estado completado
+            statusIcon.textContent = '✓';
+            statusIcon.className = 'icon success';
+            statusMessage.textContent = 'Pago Completado';
+            statusMessage.className = 'status-text success-text';
+            messageText.textContent = '¡Excelente! Tu pago se ha procesado exitosamente.';
+            
+        } else if (status === 'fallido') {
+            // Estado fallido
+            statusIcon.textContent = '✕';
+            statusIcon.className = 'icon failed';
+            statusMessage.textContent = 'Pago Fallido';
+            statusMessage.className = 'status-text failed-text';
+            messageText.textContent = 'Lo sentimos, su pago no pudo ser procesado. Por favor intente nuevamente o contáctenos.';
+            
         } else {
-            statusElement.textContent = 'Estado Desconocido';
-            statusElement.style.color = '#FF9800';
+            // Estado desconocido
+            statusIcon.textContent = '?';
+            statusIcon.className = 'icon failed';
+            statusMessage.textContent = 'Estado Desconocido';
+            statusMessage.className = 'status-text failed-text';
+            messageText.textContent = 'No se pudo determinar el estado del pago.';           
         }
-
-        // Puedes personalizar el botón de acción
-        buttonElement.href = '/'; // Redirige a la página principal
-        buttonElement.textContent = 'Ir al Inicio';
     </script>
 </body>
 </html>
