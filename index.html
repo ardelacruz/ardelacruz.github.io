@@ -1,7 +1,185 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado de Pago</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 500px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        .checkmark {
+            color: white;
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .status-text {
+            color: #667eea;
+            font-size: 1.8em;
+            font-weight: 600;
+            margin: 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .message {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(102, 126, 234, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .status-text {
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
 <body>
-<h1>Integra</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <div class="container">
+        <div class="icon">
+            <div class="checkmark">✓</div>
+        </div>
+        
+        <h1>¡Transacción Procesada!</h1>
+        
+        <div class="status-text" id="statusMessage">
+            Procesando...
+        </div>
+        
+        <p class="message">
+            Gracias por tu compra. Tu pago ha sido procesado exitosamente.
+        </p>
+        
+        <a href="#" class="btn" id="actionButton">Continuar</a>
+    </div>
+
+    <script>
+        // Función para obtener parámetros de la URL
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(window.location.href);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Obtener el parámetro 'status' de la URL
+        var status = getUrlParameter('status');
+        var statusElement = document.getElementById('statusMessage');
+        var buttonElement = document.getElementById('actionButton');
+
+        // Verificar si el parámetro es 'pago completado'
+        if (status.toLowerCase() === 'pago completado') {
+            statusElement.textContent = 'Pago Completado';
+            statusElement.style.color = '#4CAF50';
+        } else if (status) {
+            statusElement.textContent = status;
+        } else {
+            statusElement.textContent = 'Estado Desconocido';
+            statusElement.style.color = '#FF9800';
+        }
+
+        // Puedes personalizar el botón de acción
+        buttonElement.href = '/'; // Redirige a la página principal
+        buttonElement.textContent = 'Ir al Inicio';
+    </script>
 </body>
 </html>
